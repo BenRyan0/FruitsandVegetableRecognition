@@ -30,33 +30,7 @@ st.markdown("""
     *{
         font-family: "Poppins", sans-serif;
     }
-     .stButton>button {
-        background-color: #02A367;
-        border: 2px solid #02A367;
-        color: white;
-        padding: 15px 32px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 16px;
-        font-weight: 700;
-        margin: 3px 2px;
-        cursor: pointer;
-        border-radius: 10px;
-        transition: .3s ease-in-out; 
-    }
-    .stButton>button:hover{
-        border: 2px solid #02A367;
-        background-color: #fff;
-        color: #02A367
-
-    }
-    .stButton>button:active{
-        background-color: #02A367;
-        border: 2px solid #02A367;
-        color: white;
-    
-    }
+  
   
     </style>
     """, unsafe_allow_html=True)
@@ -158,16 +132,18 @@ elif app_mode == "About Project":
 elif app_mode == "Prediction":
     st.header("Model Prediction")
     test_image = st.file_uploader("Choose an Image:")
-    if test_image:
-        st.image(test_image, width=4, use_column_width=True)
+    
     if st.button("Predict"):
-        # st.snow()
-        st.write("Our Predictions")
-        top_k = st.slider("Number of Top Predictions:", 1, 10, 3)  # Slider to select number of top predictions
-        result_indices_confidences = model_prediction(test_image, top_k)
-        if result_indices_confidences != -1:
-            with open("labels.txt") as f:
-                content = f.readlines()
-            labels = [i.strip() for i in content]
-            for idx, confidence in result_indices_confidences:
-                st.success(f"{labels[idx]}: {confidence*100:.2f}% confidence")
+        if test_image is None:
+            st.warning("Please upload an image before predicting.")
+        else:
+            st.image(test_image, width=4, use_column_width=True)
+            st.write("Our Predictions")
+            top_k = st.slider("Number of Top Predictions:", 1, 10, 3)
+            result_indices_confidences = model_prediction(test_image, top_k)
+            if result_indices_confidences != -1:
+                with open("labels.txt") as f:
+                    content = f.readlines()
+                labels = [i.strip() for i in content]
+                for idx, confidence in result_indices_confidences:
+                    st.success(f"{labels[idx]}: {confidence*100:.2f}% confidence")
