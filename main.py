@@ -2,6 +2,65 @@ import streamlit as st
 import tensorflow as tf
 import numpy as np
 from PIL import Image
+import base64
+
+# Read the image file for the favicon
+file_path = "images/plant_.png"  # Replace with your image file path
+with open(file_path, "rb") as f:
+    img_bytes = f.read()
+
+# Encode image to base64
+encoded_img = base64.b64encode(img_bytes).decode()
+
+# Set the page configuration
+st.set_page_config(
+    page_title="Snap-n-Sprout",  # Title of the browser tab
+    page_icon=f"data:image/png;base64,{encoded_img}",  # Favicon as base64 encoded image
+    layout="centered",  # Layout can be "centered" or "wide"
+)
+
+
+# Inject custom CSS
+st.markdown("""
+    <style>
+   @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+            
+    
+    *{
+        font-family: "Poppins", sans-serif;
+    }
+     .stButton>button {
+        background-color: #02A367;
+        border: 2px solid #02A367;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        font-weight: 700;
+        margin: 3px 2px;
+        cursor: pointer;
+        border-radius: 10px;
+        transition: .3s ease-in-out; 
+    }
+    .stButton>button:hover{
+        border: 2px solid #02A367;
+        background-color: #fff;
+        color: #02A367
+
+    }
+    .stButton>button:active{
+        background-color: #02A367;
+        border: 2px solid #02A367;
+        color: white;
+    
+    }
+  
+    </style>
+    """, unsafe_allow_html=True)
+
 
 # Load model once at the start with caching
 def load_model():
@@ -39,9 +98,29 @@ app_mode = st.sidebar.selectbox("Select Page", ["Home", "About Project", "Predic
 
 # Main Page
 if app_mode == "Home":
-    st.header("FRUITS & VEGETABLES RECOGNITION SYSTEM")
-    image_path = "home_img.jpg"
+    st.header("FRUITS & VEGETABLES RECOGNITION")
+    image_path = "images/Main_BG.png"
     st.image(image_path)
+    st.markdown("""
+    Snap-n-Sprout's mission is to empower everyone to become confident explorers in the fresh produce aisle. Through our image recognition technology and engaging resources, we strive to demystify fruits and vegetables, promote healthy eating habits, reduce food waste, and cultivate a love for the vibrant world of fresh food.
+                
+        ### How It Works
+    1. **Upload Image:** Just open the app and upload a picture of your mystery fruit or vegetable.
+    2. **Analysis:** Our powerful image recognition technology instantly analyzes the picture and reveals the produce's identity.
+    3. **Results:** View the results and recommendations for further action.
+
+    ### Why Choose Us?
+    - **Accuracy:** Our system utilizes state-of-the-art machine learning techniques for accurate detection.
+    - **User-Friendly:** Simple and intuitive interface for seamless user experience.
+    - **Fast and Efficient:** Receive results in seconds, allowing for quick decision-making.
+
+    ### Get Started
+    Click on the **Prediction** page in the sidebar to upload an image and experience the power of our Plant Disease Recognition System!
+
+    ### About Us
+    Learn more about the project, our team, and our goals on the **About** page.
+    """)
+
 
 # About Project
 elif app_mode == "About Project":
@@ -55,6 +134,25 @@ elif app_mode == "About Project":
     st.text("1. train (100 images each)")
     st.text("2. test (10 images each)")
     st.text("3. validation (10 images each)")
+    st.markdown("[Dataset Used In Training](https://www.kaggle.com/datasets/kritikseth/fruit-and-vegetable-image-recognition)")
+    # st.markdown("[Code Github Repository](https://github.com/BenRyan0/ITBAN3_Plant_Desease_Detection.git)")
+
+    st.header("Our Team")
+    
+    team_members = [
+        {"name": "SUMINGUIT, ABDU RASHID", "image": "team/abdu.png","section": "ITBAN3 : IT3A"},
+        {"name": "CASILA, SHENA MAE",  "image": "team/Sheena.png","section": "ITBAN3 : IT3A"},
+    ]
+
+    cols = st.columns(2)  # Adjust the number of columns based on the number of team members
+
+    for idx, member in enumerate(team_members):
+        with cols[idx % 2]:  # Loop through the columns
+            st.image(member["image"], width=300)
+            st.subheader(member["name"])
+            st.markdown(member["section"])
+          
+        
 
 # Prediction Page
 elif app_mode == "Prediction":
